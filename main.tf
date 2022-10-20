@@ -9,7 +9,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.18.0"
+      version = "~> 4.23.0"
     }
   }
 }
@@ -107,21 +107,22 @@ module "dynamodb_table" {
     {
       name = "id"
       type = "N"
-    },
-    {
+    }
+    ,{
       name = "description"
       type = "S"
     }
   ]
-  global_secondary_index {
+
+  global_secondary_indexes = [{
     name               = "DescriptionIndex"
     hash_key           = "description"
-    range_key          = "Applicants"
     write_capacity     = 10
     read_capacity      = 10
     projection_type    = "INCLUDE"
     non_key_attributes = ["id"]
-  }
+  }]
+
   tags = {
     Terraform   = "true"
     Environment = "staging"

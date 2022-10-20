@@ -2,5 +2,5 @@
 
 output "domain_name" {
   description = "buckeet domain name"
-  value       = aws_s3_bucket.site.bucket_regional_domain_name
+  value       = module.site_bucket.s3_bucket_bucket_domain_name
 }
