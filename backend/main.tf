@@ -13,6 +13,8 @@ provider "aws" {
   region = var.aws_region
 }
 
+
+//TODO(nacho): usar modulo de s3
 resource "aws_s3_bucket" "state" {
   bucket_prefix = "state"
 }

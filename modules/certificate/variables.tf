@@ -4,8 +4,7 @@ variable "base_domain" {
   type        = string
 }
 
-variable "app_subdomain" {
+variable "app_domain" {
   description = "Application subdomain"
   type        = string
-  default     = "demo"
 }

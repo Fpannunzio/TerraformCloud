@@ -4,22 +4,9 @@ variable "base_domain" {
   type        = string
 }
 
-variable "app_subdomain" {
+variable "app_domain" {
   description = "Application subdomain"
   type        = string
-  default     = "demo"
-}
-
-variable "primary_subdomain" {
-  description = "Primary deployment subdomain"
-  type        = string
-  default     = "aws"
-}
-
-variable "secondary_subdomain" {
-  description = "Secondary deployment subdomain"
-  type        = string
-  default     = "gcp"
 }
 
 variable "app_primary_health_check_path" {
@@ -28,13 +15,6 @@ variable "app_primary_health_check_path" {
   default     = "/api/time"
 }
 
-variable "pri_deploy_cloudfront" {
+variable "cdn" {
   description = "The cloudfront distribution for the primary deployment"
 }
-
-variable "sec_deploy_name_servers" {
-  description = "Secondary deployment DNS Hosted zone name servers"
-  type = list(string)
-}
-
-

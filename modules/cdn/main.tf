@@ -23,17 +23,17 @@ resource "aws_cloudfront_distribution" "redes" {
     }
   }
   
-  origin {
-    domain_name = var.api_domain_name
-    origin_id   = var.api_origin_id
+  # origin {
+  #   domain_name = var.api_domain_name
+  #   origin_id   = var.api_origin_id
 
-    custom_origin_config {
-        origin_protocol_policy = "http-only"
-        origin_ssl_protocols = ["TLSv1.2"]
-        https_port = 443
-        http_port = 80
-    }
-  }
+  #   custom_origin_config {
+  #       origin_protocol_policy = "http-only"
+  #       origin_ssl_protocols = ["TLSv1.2"]
+  #       https_port = 443
+  #       http_port = 80
+  #   }
+  # }
 
   enabled             = true
   is_ipv6_enabled     = false
@@ -58,17 +58,17 @@ resource "aws_cloudfront_distribution" "redes" {
   }
 
   # Cache behavior with precedence 0
-  ordered_cache_behavior {
-    path_pattern     = "/api/*"
-    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-    cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id  = data.aws_cloudfront_cache_policy.disabled.id
-    target_origin_id = var.api_origin_id
+  # ordered_cache_behavior {
+  #   path_pattern     = "/api/*"
+  #   allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+  #   cached_methods   = ["GET", "HEAD", "OPTIONS"]
+  #   cache_policy_id  = data.aws_cloudfront_cache_policy.disabled.id
+  #   target_origin_id = var.api_origin_id
 
-    min_ttl                = 0
-    compress               = true
-    viewer_protocol_policy = "redirect-to-https"
-  }
+  #   min_ttl                = 0
+  #   compress               = true
+  #   viewer_protocol_policy = "redirect-to-https"
+  # }
 
   price_class = "PriceClass_100"
 

@@ -4,7 +4,7 @@ data "aws_route53_zone" "main" {
 
 resource "aws_acm_certificate" "app" {
   domain_name               = var.base_domain
-  subject_alternative_names = ["*.${var.base_domain}", "www.${local.app_domain}"]
+  subject_alternative_names = ["www.${var.app_domain}"]
   validation_method         = "DNS"
 }
 
