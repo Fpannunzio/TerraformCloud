@@ -2,21 +2,21 @@ data "aws_route53_zone" "main" {
   name = var.base_domain
 }
 
-resource "aws_route53_record" "www" {
-  zone_id = data.aws_route53_zone.main.zone_id
-  name    = "www.${var.app_domain}"
-  type    = "CNAME"
+# resource "aws_route53_record" "www" {
+#   zone_id = data.aws_route53_zone.main.zone_id
+#   name    = "www.${var.app_domain}"
+#   type    = "CNAME"
 
-  depends_on = [
-    aws_route53_record.main
-  ]
+#   depends_on = [
+#     aws_route53_record.main
+#   ]
 
-  alias {
-    name    = aws_route53_record.main.name
-    zone_id =  data.aws_route53_zone.main.id
-    evaluate_target_health = false
-  }
-}
+#   alias {
+#     name    = aws_route53_record.main.name
+#     zone_id =  data.aws_route53_zone.main.id
+#     evaluate_target_health = false
+#   }
+# }
 
 resource "aws_route53_record" "main" {
   zone_id = data.aws_route53_zone.main.zone_id

@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.2.0"
+  required_version = "~> 1.3.0"
 
   required_providers {
     aws = {
@@ -16,7 +16,7 @@ provider "aws" {
 
 //TODO(nacho): usar modulo de s3
 resource "aws_s3_bucket" "state" {
-  bucket_prefix = "state"
+  bucket_prefix = "state-faus"
 }
 
 resource "aws_s3_bucket_public_access_block" "state" {

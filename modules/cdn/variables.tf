@@ -8,13 +8,13 @@ variable "s3_origin_id" {
   type        = string
 }
 
-# variable "api_origin_id" {
-#   type        = string
-# }
+variable "api_origin_id" {
+  type        = string
+}
 
-# variable "api_domain_name" {
-#   type        = string
-# }
+variable "api_domain_name" {
+  type        = string
+}
 
 variable "bucket_domain_name" {
   type        = string

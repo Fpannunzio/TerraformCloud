@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.2.0"
+  required_version = "~> 1.3.0"
 
   backend "s3" {
     key     = "state"
@@ -20,11 +20,9 @@ provider "aws" {
 
 locals {
   app_domain          = var.base_domain
-  # pri_deploy_domain   = "${local.pri_app_deploy}.${var.base_domain}"
-  # sec_deploy_domain   = "${local.sec_app_deploy}.${var.base_domain}"
 
   s3_origin_id        = "static-site"
-  # api_origin_id       = "nginx-api"
+  api_origin_id       = "api-gateway"
 }
 
 module "certificate" {
@@ -33,37 +31,6 @@ module "certificate" {
   base_domain = var.base_domain
   app_domain  = local.app_domain
 }
-
-# module "vpc" {
-#     source = "./aws/modules/vpc"
-
-#     cidr_block  = local.aws_vpc_network
-#     zones_count = local.aws_az_count
-#     natgw       = true
-# }
-
-# resource "aws_key_pair" "redes_key" {
-#   key_name   = local.ssh_key_name
-#   public_key = file(var.ssh_key_path)
-# }
-
-# data "template_file" "web_server_ud" {
-#   template = file(local.aws_ec2_web_user_data)
-# }
-
-# module "web_server" {
-#     source = "./aws/modules/web_server"
-
-#     vpc_id          = module.vpc.vpc_id
-#     vpc_cidr        = module.vpc.vpc_cidr
-#     private_subnets = module.vpc.private_subnets_ids
-#     public_subnets  = module.vpc.public_subnets_ids
-#     user_data       = data.template_file.web_server_ud.rendered
-#     key_name        = local.ssh_key_name
-#     ami             = local.aws_ec2_ami
-#     my_ips          = var.my_ips
-#     instance_type   = local.aws_ec2_type
-# }
 
 resource "aws_cloudfront_origin_access_identity" "cdn" {
   comment = local.s3_origin_id
@@ -81,8 +48,8 @@ module "cdn" {
 
   OAI                   = aws_cloudfront_origin_access_identity.cdn
   s3_origin_id          = local.s3_origin_id
-  # api_origin_id         = local.api_origin_id
-  # api_domain_name       = module.web_server.domain_name
+  api_origin_id         = local.api_origin_id
+  api_domain_name       = module.api_gateway.domain_name
   bucket_domain_name    = module.static_site.domain_name
   aliases               = ["www.${local.app_domain}", local.app_domain]
   certificate_arn       = module.certificate.arn
@@ -97,3 +64,35 @@ module "dns" {
   cdn                           = module.cdn.cloudfront_distribution
 }
 
+module "vpc" {
+    source = "./modules/vpc"
+
+    cidr_block  = local.aws_vpc_network
+    zones_count = local.aws_az_count
+}
+
+module "api_gateway" {
+  source = "./modules/api_gateway"
+
+  aws_region      = var.aws_region
+  aws_account_id  = local.aws_account_id
+  base_domain     = var.base_domain
+  cloudfront_dist = module.cdn.cloudfront_distribution
+  lambda          = module.lambda.function
+  # api_key_id = aws_api_gateway_api_key.api.id
+}
+
+module "lambda" {
+  source = "./modules/lambda"
+
+  function_name       = "test"
+  filename            = "./lambda/test.zip"
+  handler             = "test.handler"
+  runtime             = "nodejs12.x"
+
+  subnet_ids = module.vpc.private_subnets_ids
+  vpc_id     = module.vpc.vpc_id
+  tags = {
+    Name = "Test Lambda"
+  }
+}

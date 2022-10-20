@@ -4,7 +4,7 @@ resource "aws_kms_key" "state" {
   policy = data.aws_iam_policy_document.key.json
 }
 
-resource "aws_kms_alias" "statee" {
+resource "aws_kms_alias" "state" {
   name          = "alias/tf_state_key"
   target_key_id = aws_kms_key.state.key_id
 }
