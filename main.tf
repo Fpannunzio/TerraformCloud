@@ -96,3 +96,26 @@ module "lambda" {
     Name = "Test Lambda"
   }
 }
+
+module "dynamodb_table" {
+  source   = "terraform-aws-modules/dynamodb-table/aws"
+
+  name     = "job-searchs"
+  hash_key = "id"
+
+  attributes = [
+    {
+      name = "id"
+      type = "N"
+    },
+    {
+      name = "description"
+      type = "S"
+    }
+  ]
+
+  tags = {
+    Terraform   = "true"
+    Environment = "staging"
+  }
+}
