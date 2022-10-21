@@ -30,10 +30,6 @@ data "aws_iam_policy_document" "site" {
   }
 }
 
-resource "aws_kms_key" "objects" {
-  description             = "KMS key is used to encrypt bucket objects"
-  deletion_window_in_days = 7
-}
 
 module "site_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
@@ -70,9 +66,15 @@ module "site_bucket" {
     error_document = "error.html"
   }
 
+  
+# TODO: Se puede usar encripcion con paginas estaticas? tiene sentido?
   # server_side_encryption_configuration = {
   #   rule = {
   #     bucket_key_enabled = true
   #   }
+  # }
+  # resource "aws_kms_key" "objects" {
+  #   description             = "KMS key is used to encrypt bucket objects"
+  #   deletion_window_in_days = 7
   # }
 }

@@ -1,8 +1,3 @@
-# variable "aws_authorized_role" {
-#   description = "The lambda role"
-#   type        = string
-# }
-
 variable "tags" {
   description = "The lambda function tags"
   type        = map(any)
@@ -38,3 +33,42 @@ variable "subnet_ids" {
   type        = list(any)
 }
 
+variable "base_domain" {
+  description = "Application base domain"
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The aws account id"
+  type        = string
+}
+
+variable "aws_region" {
+  description = "The aws region"
+  type        = string
+}
+
+variable "gateway_id" {
+  description = "The api gateway id"
+  type        = string
+}
+
+variable "gateway_resource_id" {
+  description = "The api gateway resource id"
+  type        = string
+}
+
+variable "path_part" {
+  description = "The path to call lambda"
+  type        = string
+}
+
+variable "http_method" {
+  description = "The http method to call lambda"
+  type        = string
+}
+
+variable "status_code" {
+  description = "The http method to call lambda"
+  type        = string
+}

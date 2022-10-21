@@ -48,9 +48,9 @@ module "cdn" {
 
   OAI                   = aws_cloudfront_origin_access_identity.cdn
   s3_origin_id          = local.s3_origin_id
+  bucket_domain_name    = module.static_site.domain_name
   api_origin_id         = local.api_origin_id
   api_domain_name       = module.api_gateway.domain_name
-  bucket_domain_name    = module.static_site.domain_name
   aliases               = ["www.${local.app_domain}", local.app_domain]
   certificate_arn       = module.certificate.arn
 }
@@ -60,7 +60,6 @@ module "dns" {
 
   base_domain                   = var.base_domain
   app_domain                    = local.app_domain
-  app_primary_health_check_path = "/api/time"
   cdn                           = module.cdn.cloudfront_distribution
 }
 
@@ -75,11 +74,10 @@ module "api_gateway" {
   source = "./modules/api_gateway"
 
   aws_region      = var.aws_region
-  aws_account_id  = local.aws_account_id
-  base_domain     = var.base_domain
-  cloudfront_dist = module.cdn.cloudfront_distribution
-  lambda          = module.lambda.function
-  # api_key_id = aws_api_gateway_api_key.api.id
+  
+  
+  lambda_hashes   = [module.lambda.lambda_rest_configuration_hash]
+
 }
 
 module "lambda" {
@@ -90,8 +88,19 @@ module "lambda" {
   handler             = "test.handler"
   runtime             = "nodejs12.x"
 
-  subnet_ids = module.vpc.private_subnets_ids
-  vpc_id     = module.vpc.vpc_id
+  base_domain         = var.base_domain
+  aws_account_id      = local.aws_account_id 
+  aws_region          = var.aws_region 
+
+  gateway_id          = module.api_gateway.id
+  gateway_resource_id = module.api_gateway.resource_id
+
+  path_part           = "test"
+  http_method         = "GET"
+  status_code         = "200"
+
+  subnet_ids          = module.vpc.private_subnets_ids
+  vpc_id              = module.vpc.vpc_id
   tags = {
     Name = "Test Lambda"
   }

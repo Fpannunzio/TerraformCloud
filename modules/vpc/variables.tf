@@ -9,5 +9,5 @@ variable "cidr_block" {
 variable "zones_count" {
   description = "Number of zones."
   type        = number
-  default     = 3
+  default     = 2
 }
