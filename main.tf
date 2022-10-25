@@ -106,6 +106,32 @@ module "lambda" {
   }
 }
 
+module "lambda" {
+  source = "./modules/lambda"
+
+  function_name       = "listar_busquedas"
+  filename            = "./lambda/listar_busquedas.zip"
+  handler             = "listar_busquedas.handler"
+  runtime             = "nodejs12.x"
+
+  base_domain         = var.base_domain
+  aws_account_id      = local.aws_account_id 
+  aws_region          = var.aws_region 
+
+  gateway_id          = module.api_gateway.id
+  gateway_resource_id = module.api_gateway.resource_id
+
+  path_part           = "listar_busquedas"
+  http_method         = "GET"
+  status_code         = "200"
+
+  subnet_ids          = module.vpc.private_subnets_ids
+  vpc_id              = module.vpc.vpc_id
+  tags = {
+    Name = "ListarBusquedas Lambda"
+  }
+}
+
 module "dynamodb_table" {
   source   = "terraform-aws-modules/dynamodb-table/aws"
 
